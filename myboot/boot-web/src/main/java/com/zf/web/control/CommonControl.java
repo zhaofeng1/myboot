@@ -15,5 +15,6 @@ public class CommonControl {
 	public String home() {
 		log.info("index start!");
 		return "Hello World! index";
+		
 	}
 }
