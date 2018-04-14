@@ -1,4 +1,4 @@
-package com.zf.web.model;
+package com.zf.web.model.secondary;
 
 import java.io.Serializable;
 

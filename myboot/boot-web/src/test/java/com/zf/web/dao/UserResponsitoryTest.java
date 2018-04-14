@@ -10,7 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
-import com.zf.web.model.User;
+import com.zf.web.dao.primary.UserRepository;
+import com.zf.web.model.primary.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

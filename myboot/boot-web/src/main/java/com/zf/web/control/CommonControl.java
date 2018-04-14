@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
-import com.zf.web.dao.UserRepository;
-import com.zf.web.model.User;
+import com.zf.web.dao.primary.UserRepository;
+import com.zf.web.model.primary.User;
 
 @RestController
 @RequestMapping(value = "/common")
