@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.zf.web.model.primary.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserPrimaryRepository extends JpaRepository<User, Long> {
 	User findByUsername(String userName);
 
 

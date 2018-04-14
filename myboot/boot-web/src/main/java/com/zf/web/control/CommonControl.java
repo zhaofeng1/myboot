@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
-import com.zf.web.dao.primary.UserRepository;
+import com.zf.web.dao.primary.UserPrimaryRepository;
 import com.zf.web.model.primary.User;
 
 @RestController
@@ -18,13 +18,13 @@ public class CommonControl {
 	private static Logger log = Logger.getLogger(CommonControl.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserPrimaryRepository userPrimaryRepository;
 
 	//	@RequestMapping(value = "/index")
 	@RequestMapping("/index")
 	public String home() {
 		log.info("index start!");
-		List<User> list = userRepository.findAll();
+		List<User> list = userPrimaryRepository.findAll();
 		System.out.println(JSON.toJSONString(list));
 		return "Hello World! index";
 		

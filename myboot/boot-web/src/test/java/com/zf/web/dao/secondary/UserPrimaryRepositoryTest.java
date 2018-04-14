@@ -1,4 +1,4 @@
-package com.zf.web.dao;
+package com.zf.web.dao.secondary;
 
 import java.util.List;
 
@@ -10,25 +10,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
-import com.zf.web.dao.primary.UserRepository;
-import com.zf.web.model.primary.User;
+import com.zf.web.model.secondary.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserResponsitoryTest {
+public class UserPrimaryRepositoryTest {
 
 	@Autowired
-	UserRepository userRepository;
+	UserSecondaryRepository userSecondaryRepository;
 
 	@Test
 	public void findAllTest() {
-		List<User> list = userRepository.findAll();
+		List<User> list = userSecondaryRepository.findAll();
 		System.out.println(JSON.toJSONString(list));
 	}
 
 	@Test
 	public void getByUsername() {
-		User user = userRepository.findByUsername("zf");
+		User user = userSecondaryRepository.findByUsername("zf");
 		System.out.println(JSON.toJSONString(user));
 	}
 
@@ -38,7 +37,7 @@ public class UserResponsitoryTest {
 		user.setUsername("cs");
 		user.setUserpwd("123");
 
-		userRepository.save(user);
+		userSecondaryRepository.save(user);
 	}
 
 	@Test
@@ -48,7 +47,7 @@ public class UserResponsitoryTest {
 		user.setUsername("cs1");
 		user.setUserpwd("123");
 
-		userRepository.save(user);
+		userSecondaryRepository.save(user);
 		//		throw new Exception("sysconfig error");
 	}
 }

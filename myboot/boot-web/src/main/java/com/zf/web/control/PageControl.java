@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.zf.web.dao.primary.UserRepository;
+import com.zf.web.dao.primary.UserPrimaryRepository;
 
 @Controller
 @RequestMapping(value = "/page")
@@ -15,7 +15,7 @@ public class PageControl {
 	private static Logger log = Logger.getLogger(PageControl.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserPrimaryRepository userPrimaryRepository;
 
 	//	@RequestMapping(value = "/index")
 	//	@RequestMapping("/index")
