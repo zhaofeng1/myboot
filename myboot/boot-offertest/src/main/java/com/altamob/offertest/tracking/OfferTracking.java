@@ -175,6 +175,30 @@ public class OfferTracking {
 		return sb.toString();
 	}
 
+	public static void startTracking(String path) {
+		String baseUrl = "http://ad.click.kaffnet.com/v1/tracking";
+		String offerid = "174215926";
+		String platform = "android";
+		String country = "ID";
+		String source = "10";
+
+		//		String path = "E:/logs/offertest/offergeo.txt";
+
+		try {
+			List<String> list = FileUtils.readLines(new File(path));
+			for (String s : list) {
+				offerGeoQueue.add(s);
+			}
+			for (int i = 0; i < 1; i++) {
+				Thread t = new Thread(new TrackingThread());
+				t.start();
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
+
 	public static void main(String[] args) {
 		String baseUrl = "http://ad.click.kaffnet.com/v1/tracking";
 		String offerid = "174215926";
@@ -208,11 +232,11 @@ public class OfferTracking {
 				//					}
 				//				}
 			}
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 1; i++) {
 				Thread t = new Thread(new TrackingThread());
 				t.start();
 			}
-			Thread.sleep(1 * 24 * 60 * 60 * 1000);
+			//			Thread.sleep(1 * 24 * 60 * 60 * 1000);
 
 		} catch (Exception e) {
 			logger.error(e);

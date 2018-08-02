@@ -42,9 +42,11 @@ public class TrackingThread implements Runnable {
 						if (StringUtils.isNotBlank(responseStr)) {
 							JSONObject json = JSON.parseObject(responseStr);
 							String logTxt = OfferTracking.getLog(json, offerid, country, realClickUrl, source);
-							System.out.println(json.toJSONString());
-							System.out.println(Thread.currentThread().getId() + ";" + logTxt);
+							//							System.out.println(json.toJSONString());
+							//							System.out.println(Thread.currentThread().getId() + ";" + logTxt);
 							OfferTrackingLog.logStr(logTxt);
+						} else {
+							System.out.println("offerid:" + offerid);
 						}
 					}
 				}
