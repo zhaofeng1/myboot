@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.altamob.offertest.model.vo.ReqData;
 import com.altamob.offertest.util.FieldMatchURLParam;
 import com.altamob.offertest.util.GaidUtil;
 import com.altamob.offertest.util.HttpUtil;
@@ -29,7 +30,7 @@ public class OfferTracking {
 
 	public static ConcurrentLinkedQueue<String> offerGeoQueue = new ConcurrentLinkedQueue<>();
 
-	public static Map<String, String> asyncResultMap = new HashMap<>();
+	public static Map<String, ReqData> asyncResultMap = new HashMap<>();
 
 	/**
 	 * 
@@ -299,7 +300,7 @@ public class OfferTracking {
 		}
 	}
 
-	public static String getReqFromAsyncResultMap(String key) {
+	public static ReqData getReqFromAsyncResultMap(String key) {
 		return asyncResultMap.get(key);
 	}
 

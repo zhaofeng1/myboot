@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.altamob.offertest.model.vo.ReqData;
 import com.altamob.offertest.util.DateUtils;
 
 /**
@@ -47,7 +48,12 @@ public class TrackingAsyncThread implements Runnable {
 						String responseStr = OfferTracking.getResultFromOfferTestAsync(country, platform, realClickUrl);
 						if (StringUtils.isNotBlank(responseStr)) {
 							//
-							OfferTracking.asyncResultMap.put(responseStr, s + "\t" + DateUtils.dateToString(new Date(), null));
+							ReqData reqData = new ReqData();
+							reqData.setClickurl(realClickUrl);
+							reqData.setOfferid(offerid);
+							reqData.setGeo(country);
+							reqData.setStart(DateUtils.dateToString(new Date(), null));
+							OfferTracking.asyncResultMap.put(responseStr, reqData);
 						} else {
 							logger.info("offerid:" + offerid);
 						}

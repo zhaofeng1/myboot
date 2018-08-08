@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.altamob.offertest.model.vo.ReqData;
 import com.altamob.offertest.service.FeedOfferService;
 import com.altamob.offertest.tracking.OfferTracking;
 import com.altamob.offertest.util.DateUtils;
@@ -44,20 +46,17 @@ public class AdminControl {
 		if (reqBody != null && !reqBody.isEmpty()) {
 			try {
 				String id = reqBody.getString("id");
-				String reqStr = OfferTracking.getReqFromAsyncResultMap(id);
+				ReqData reqData = OfferTracking.getReqFromAsyncResultMap(id);
 				String offerid = "";
 				String country = "";
 				String start = "";
 				String clickurl = "";
 				String end = DateUtils.dateToString(new Date(), null);
-				if(StringUtils.isNotBlank(reqStr)){
-					String[] reqArray = reqStr.split("\t");
-					if (reqArray != null && reqArray.length == 4) {
-						offerid = reqArray[0];
-						country = reqArray[1];
-						start = reqArray[2];
-						clickurl = reqArray[3];
-					}
+				if (reqData != null) {
+					offerid = reqData.getOfferid();
+					country = reqData.getGeo();
+					start = reqData.getStart();
+					clickurl = reqData.getClickurl();
 				}
 
 				String logTxt = OfferTracking.getLogTemp(reqBody, offerid, country, clickurl, "10", start, end);
@@ -84,6 +83,12 @@ public class AdminControl {
 			OfferTracking.startTrackingFromDb(tempList, threadnum);
 		}
 		return "ok";
+
+	}
+
+	@RequestMapping("/getReqmap")
+	public String getReqmap() {
+		return JSON.toJSONString(OfferTracking.asyncResultMap);
 
 	}
 }
