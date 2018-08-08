@@ -13,7 +13,7 @@ public class TrackingThread implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("start");
+		logger.info(Thread.currentThread().getId() + "start");
 		String baseUrl = "http://ad.click.kaffnet.com/v1/tracking";
 		String offerid = "174215926";
 		String platform = "android";
@@ -28,6 +28,7 @@ public class TrackingThread implements Runnable {
 				s = OfferTracking.offerGeoQueue.poll();
 
 				if (StringUtils.isNotBlank(s)) {
+					logger.info("TrackingThread s:" + s);
 					String[] sArray = s.split("\t");
 					offerid = sArray[0];
 					country = sArray[1];
@@ -40,13 +41,18 @@ public class TrackingThread implements Runnable {
 						String realClickUrl = baseUrl + clickurl;
 						String responseStr = OfferTracking.getResultFromOfferTest(country, platform, realClickUrl);
 						if (StringUtils.isNotBlank(responseStr)) {
-							JSONObject json = JSON.parseObject(responseStr);
-							String logTxt = OfferTracking.getLog(json, offerid, country, realClickUrl, source);
-							//							System.out.println(json.toJSONString());
-							//							System.out.println(Thread.currentThread().getId() + ";" + logTxt);
-							OfferTrackingLog.logStr(logTxt);
+							try {
+								JSONObject json = JSON.parseObject(responseStr);
+								String logTxt = OfferTracking.getLog(json, offerid, country, realClickUrl, source);
+								//							System.out.println(json.toJSONString());
+								//							System.out.println(Thread.currentThread().getId() + ";" + logTxt);
+								OfferTrackingLog.logStr(logTxt);
+							} catch (Exception e) {
+								logger.info("TrackingThread.run responseStr:" + responseStr);
+								Thread.sleep(20 * 1000);
+							}
 						} else {
-							System.out.println("offerid:" + offerid);
+							logger.info("offerid:" + offerid);
 						}
 					}
 				}

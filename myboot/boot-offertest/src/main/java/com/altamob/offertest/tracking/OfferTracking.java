@@ -175,7 +175,7 @@ public class OfferTracking {
 		return sb.toString();
 	}
 
-	public static void startTracking(String path) {
+	public static void startTracking(String path, int num) {
 		String baseUrl = "http://ad.click.kaffnet.com/v1/tracking";
 		String offerid = "174215926";
 		String platform = "android";
@@ -189,7 +189,7 @@ public class OfferTracking {
 			for (String s : list) {
 				offerGeoQueue.add(s);
 			}
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < num; i++) {
 				Thread t = new Thread(new TrackingThread());
 				t.start();
 			}
