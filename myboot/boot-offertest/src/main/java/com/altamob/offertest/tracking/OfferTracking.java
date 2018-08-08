@@ -28,7 +28,7 @@ public class OfferTracking {
 
 	private static Logger logger = Logger.getLogger(OfferTracking.class);
 
-	public static ConcurrentLinkedQueue<String> offerGeoQueue = new ConcurrentLinkedQueue<>();
+	public static ConcurrentLinkedQueue<ReqData> offerGeoQueue = new ConcurrentLinkedQueue<>();
 
 	public static Map<String, ReqData> asyncResultMap = new HashMap<>();
 
@@ -147,7 +147,7 @@ public class OfferTracking {
 	 * @param clickurl
 	 * @return
 	 */
-	public static String getResultFromOfferTestAsync(String country, String platform, String clickurl) {
+	public static String getResultFromOfferTestAsync(String country, String platform, String clickurl, String appid) {
 		String requesturl = "https://api.offertest.net/offertest?async=true";
 		String responseStr = "";
 
@@ -157,6 +157,7 @@ public class OfferTracking {
 		dataMap.put("url", clickurl);
 		dataMap.put("platform", platform);
 		dataMap.put("callback", "http://sg-ad.altamob.com/offertest/admin/callback");
+		dataMap.put("expectedBundleId", appid);
 		//		System.out.println(JSON.toJSONString(dataMap));
 
 		try {
@@ -273,7 +274,7 @@ public class OfferTracking {
 		try {
 			List<String> list = FileUtils.readLines(new File(path));
 			for (String s : list) {
-				offerGeoQueue.add(s);
+				//				offerGeoQueue.add(s);
 			}
 			for (int i = 0; i < num; i++) {
 				Thread t = new Thread(new TrackingThread());
@@ -288,7 +289,13 @@ public class OfferTracking {
 	public static void startTrackingFromDb(List<Object[]> list, int num) {
 		try {
 			for (Object[] obj : list) {
-				offerGeoQueue.add(obj[0] + "\t" + obj[1]);
+				ReqData reqData = new ReqData();
+				reqData.setOfferid(obj[0] + "");
+				reqData.setGeo(obj[1] + "");
+				reqData.setPlatform(obj[2] + "");
+				reqData.setAppid(obj[3] + "");
+
+				offerGeoQueue.add(reqData);
 			}
 			for (int i = 0; i < num; i++) {
 				Thread t = new Thread(new TrackingAsyncThread());
@@ -316,7 +323,7 @@ public class OfferTracking {
 		try {
 			List<String> list = FileUtils.readLines(new File(path));
 			for (String s : list) {
-				offerGeoQueue.add(s);
+				//				offerGeoQueue.add(s);
 				//				String[] sArray = s.split("\t");
 				//				offerid = sArray[0];
 				//				country = sArray[1];

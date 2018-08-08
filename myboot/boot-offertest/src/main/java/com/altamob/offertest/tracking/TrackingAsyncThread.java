@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
 import com.altamob.offertest.model.vo.ReqData;
 import com.altamob.offertest.util.DateUtils;
 
@@ -25,19 +26,21 @@ public class TrackingAsyncThread implements Runnable {
 		String platform = "android";
 		String country = "ID";
 		String source = "10";
-		String s = "";
+		String appid = "";
+		ReqData reqData = null;
 		while (true) {
 			try {
 				if (OfferTracking.offerGeoQueue.isEmpty()) {
 					break;
 				}
-				s = OfferTracking.offerGeoQueue.poll();
+				reqData = OfferTracking.offerGeoQueue.poll();
 
-				if (StringUtils.isNotBlank(s)) {
-					logger.info("TrackingThread s:" + s);
-					String[] sArray = s.split("\t");
-					offerid = sArray[0];
-					country = sArray[1];
+				if (reqData != null) {
+					logger.info("TrackingThread reqData:" + JSON.toJSONString(reqData));
+					offerid = reqData.getOfferid();
+					country = reqData.getGeo();
+					platform = reqData.getPlatform();
+					appid = reqData.getAppid();
 
 					//根据offerid 生成连接
 					String clickurl = OfferTracking.getClickByOferid(offerid, platform, country);
@@ -45,13 +48,10 @@ public class TrackingAsyncThread implements Runnable {
 
 					if (StringUtils.isNotBlank(clickurl)) {
 						String realClickUrl = baseUrl + clickurl;
-						String responseStr = OfferTracking.getResultFromOfferTestAsync(country, platform, realClickUrl);
+						String responseStr = OfferTracking.getResultFromOfferTestAsync(country, platform, realClickUrl, appid);
 						if (StringUtils.isNotBlank(responseStr)) {
 							//
-							ReqData reqData = new ReqData();
 							reqData.setClickurl(realClickUrl);
-							reqData.setOfferid(offerid);
-							reqData.setGeo(country);
 							reqData.setStart(DateUtils.dateToString(new Date(), null));
 							OfferTracking.asyncResultMap.put(responseStr, reqData);
 						} else {

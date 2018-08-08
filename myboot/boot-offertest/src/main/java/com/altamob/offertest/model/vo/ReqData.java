@@ -6,6 +6,16 @@ public class ReqData {
 	public String geo;
 	public String clickurl;
 	public String start;
+	public String platform;
+	public String appid;
+
+	public String getAppid() {
+		return appid;
+	}
+
+	public void setAppid(String appid) {
+		this.appid = appid;
+	}
 
 	public String getOfferid() {
 		return offerid;
@@ -39,5 +49,12 @@ public class ReqData {
 		this.start = start;
 	}
 
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
 
 }

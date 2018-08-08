@@ -25,7 +25,7 @@ public class TrackingThread implements Runnable {
 				if (OfferTracking.offerGeoQueue.isEmpty()) {
 					break;
 				}
-				s = OfferTracking.offerGeoQueue.poll();
+				//				s = OfferTracking.offerGeoQueue.poll();
 
 				if (StringUtils.isNotBlank(s)) {
 					logger.info("TrackingThread s:" + s);

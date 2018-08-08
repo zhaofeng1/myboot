@@ -45,6 +45,7 @@ public class AdminControl {
 	public String callback(@RequestBody JSONObject reqBody) {
 		if (reqBody != null && !reqBody.isEmpty()) {
 			try {
+				log.info("reqBody:" + reqBody.toJSONString());
 				String id = reqBody.getString("id");
 				ReqData reqData = OfferTracking.getReqFromAsyncResultMap(id);
 				String offerid = "";
@@ -53,6 +54,7 @@ public class AdminControl {
 				String clickurl = "";
 				String end = DateUtils.dateToString(new Date(), null);
 				if (reqData != null) {
+					OfferTracking.asyncResultMap.remove(id);
 					offerid = reqData.getOfferid();
 					country = reqData.getGeo();
 					start = reqData.getStart();
