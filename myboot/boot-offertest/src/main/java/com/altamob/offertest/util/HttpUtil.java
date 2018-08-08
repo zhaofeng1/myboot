@@ -56,7 +56,7 @@ public class HttpUtil {
 			client = HttpClients.custom().setDefaultRequestConfig(config).setConnectionManager(connManager).build();
 
 			//创建post方式请求对象  
-			HttpPost httpPost = new HttpPost("https://api.offertest.net/offertest");
+			HttpPost httpPost = new HttpPost(url);
 
 			//指定报文头Content-type、User-Agent
 			httpPost.setHeader("Content-Type", "application/json");

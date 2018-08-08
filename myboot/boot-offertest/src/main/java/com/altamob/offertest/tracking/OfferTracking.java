@@ -29,6 +29,8 @@ public class OfferTracking {
 
 	public static ConcurrentLinkedQueue<String> offerGeoQueue = new ConcurrentLinkedQueue<>();
 
+	public static Map<String, String> asyncResultMap = new HashMap<>();
+
 	/**
 	 * 
 	 * @param offerid
@@ -137,6 +139,34 @@ public class OfferTracking {
 		return responseStr;
 	}
 
+	/**
+	 * 异步请求
+	 * @param country
+	 * @param platform
+	 * @param clickurl
+	 * @return
+	 */
+	public static String getResultFromOfferTestAsync(String country, String platform, String clickurl) {
+		String requesturl = "https://api.offertest.net/offertest?async=true";
+		String responseStr = "";
+
+		Map<String, String> dataMap = new HashMap<String, String>();
+		dataMap.put("userid", "VSplab1_Rha5GJMcJDwJlg");
+		dataMap.put("country", country);
+		dataMap.put("url", clickurl);
+		dataMap.put("platform", platform);
+		dataMap.put("callback", "http://sg-ad.altamob.com/offertest/admin/callback");
+		//		System.out.println(JSON.toJSONString(dataMap));
+
+		try {
+			responseStr = HttpUtil.requestPostHttps(requesturl, JSON.toJSONString(dataMap));
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		return responseStr;
+	}
+
 	public static String getLog(JSONObject json, String offerid, String country, String clickurl, String source) {
 		String status = "error";//最后一跳为gp或market 
 		int jumpCount = 0;//如果最后一跳是gp或market 减1
@@ -160,10 +190,14 @@ public class OfferTracking {
 				temObj = (JSONObject) obj;
 				String url = temObj.getString("url");
 				String code = temObj.getString("code");
-				eachMap.put(url, "statusCode:" + code + ",jumpCouter:" + count);
 
 				if (count == urls.size()) {
 					targetUrl = url;
+					if (!bundleIdMatch) {
+						eachMap.put(url, "statusCode:" + code + ",jumpCouter:" + count);
+					}
+				} else {
+					eachMap.put(url, "statusCode:" + code + ",jumpCouter:" + count);
 				}
 				count++;
 			}
@@ -172,6 +206,57 @@ public class OfferTracking {
 		StringBuffer sb = new StringBuffer();
 		sb.append(offerid).append("\t").append(country).append("\t").append(clickurl).append("\t").append(jumpCount).append("\t").append(status).append("\t").append(targetUrl).append("\t").append(JSON.toJSONString(eachMap)).append("\t").append(id)
 				.append("\t").append(source).append("\t").append(System.currentTimeMillis());
+		return sb.toString();
+	}
+
+	/**
+	 * 增加了发送时间和回传时间，测试使用。
+	 * @param json
+	 * @param offerid
+	 * @param country
+	 * @param clickurl
+	 * @param source
+	 * @return
+	 */
+	public static String getLogTemp(JSONObject json, String offerid, String country, String clickurl, String source, String start, String end) {
+		String status = "error";//最后一跳为gp或market 
+		int jumpCount = 0;//如果最后一跳是gp或market 减1
+		String targetUrl = null;//最后一跳连接
+		Map<String, String> eachMap = new HashMap<String, String>();//记录每一跳连接：跳转状态。
+
+		String id = json.getString("id");
+		boolean bundleIdMatch = json.getBooleanValue("bundleIdMatch");//true 为gp 或itues
+		int nRedir = json.getIntValue("nRedir");//总跳转次数
+		JSONArray urls = json.getJSONArray("urls");
+		if (bundleIdMatch) {
+			status = "success";
+			jumpCount = nRedir - 1;
+		} else {
+			jumpCount = nRedir;
+		}
+		if (urls != null && urls.size() > 0) {
+			JSONObject temObj = null;
+			int count = 1;
+			for (Object obj : urls) {
+				temObj = (JSONObject) obj;
+				String url = temObj.getString("url");
+				String code = temObj.getString("code");
+
+				if (count == urls.size()) {
+					targetUrl = url;
+					if (!bundleIdMatch) {
+						eachMap.put(url, "statusCode:" + code + ",jumpCouter:" + count);
+					}
+				} else {
+					eachMap.put(url, "statusCode:" + code + ",jumpCouter:" + count);
+				}
+				count++;
+			}
+		}
+
+		StringBuffer sb = new StringBuffer();
+		sb.append(offerid).append("\t").append(country).append("\t").append(clickurl).append("\t").append(jumpCount).append("\t").append(status).append("\t").append(targetUrl).append("\t").append(JSON.toJSONString(eachMap)).append("\t").append(id).append("\t").append(source)
+				.append("\t").append(System.currentTimeMillis()).append("\t").append(start).append("\t").append(end);
 		return sb.toString();
 	}
 
@@ -197,6 +282,25 @@ public class OfferTracking {
 		} catch (Exception e) {
 			logger.error(e);
 		}
+	}
+
+	public static void startTrackingFromDb(List<Object[]> list, int num) {
+		try {
+			for (Object[] obj : list) {
+				offerGeoQueue.add(obj[0] + "\t" + obj[1]);
+			}
+			for (int i = 0; i < num; i++) {
+				Thread t = new Thread(new TrackingAsyncThread());
+				t.start();
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
+
+	public static String getReqFromAsyncResultMap(String key) {
+		return asyncResultMap.get(key);
 	}
 
 	public static void main(String[] args) {

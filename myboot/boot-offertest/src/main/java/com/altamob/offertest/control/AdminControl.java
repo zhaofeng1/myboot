@@ -1,20 +1,30 @@
 package com.altamob.offertest.control;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.altamob.offertest.service.FeedOfferService;
 import com.altamob.offertest.tracking.OfferTracking;
+import com.altamob.offertest.util.DateUtils;
+import com.altamob.offertest.util.OfferTrackingLog;
 
 @RestController
 @RequestMapping(value = "/admin")
 public class AdminControl {
 
 	private static Logger log = Logger.getLogger(AdminControl.class);
+
+	@Autowired
+	FeedOfferService feedOfferService;
 
 	@RequestMapping("/tracking")
 	public String tracking(String path, int num) {
@@ -31,9 +41,49 @@ public class AdminControl {
 
 	@PostMapping("/callback")
 	public String callback(@RequestBody JSONObject reqBody) {
-		log.info("callback start!");
+		if (reqBody != null && !reqBody.isEmpty()) {
+			try {
+				String id = reqBody.getString("id");
+				String reqStr = OfferTracking.getReqFromAsyncResultMap(id);
+				String offerid = "";
+				String country = "";
+				String start = "";
+				String clickurl = "";
+				String end = DateUtils.dateToString(new Date(), null);
+				if(StringUtils.isNotBlank(reqStr)){
+					String[] reqArray = reqStr.split("\t");
+					if (reqArray != null && reqArray.length == 4) {
+						offerid = reqArray[0];
+						country = reqArray[1];
+						start = reqArray[2];
+						clickurl = reqArray[3];
+					}
+				}
 
-		log.info("reqBody：" + reqBody.toJSONString());
+				String logTxt = OfferTracking.getLogTemp(reqBody, offerid, country, clickurl, "10", start, end);
+				OfferTrackingLog.logStr(logTxt);
+			} catch (Exception e) {
+				log.error("AdminControl.callback:", e);
+			}
+		} else {
+			log.info("reqBody:" + reqBody.toJSONString());
+		}
 		return "ok";
+	}
+
+	@RequestMapping("/asyncTracking")
+	public String asyncTracking(int offernum, int threadnum) {
+		List<Object[]> list = feedOfferService.getLastHourOffer();
+		List<Object[]> tempList = null;
+		if (list != null) {
+			if (list.size() > offernum) {
+				tempList = list.subList(0, offernum);
+			} else {
+				tempList = list;
+			}
+			OfferTracking.startTrackingFromDb(tempList, threadnum);
+		}
+		return "ok";
+
 	}
 }

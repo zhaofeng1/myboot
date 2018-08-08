@@ -20,6 +20,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
@@ -45,6 +46,28 @@ public class OfferTest {
 		//		if (StringUtils.isNotBlank(responseStr)) {
 		//			System.out.println(responseStr);
 		//		}
+	}
+
+	@Test
+	public void testAsync() throws ClientProtocolException, IOException {
+		String requesturl = "https://api.offertest.net/offertest?async=true";
+
+		Map<String, String> dataMap = new HashMap<String, String>();
+		dataMap.put("userid", "VSplab1_Rha5GJMcJDwJlg");
+		dataMap.put("country", "ID");
+		//		dataMap.put("url", "http://ad.click.kaffnet.com/v1/tracking?type=01&p1=30053&p2=6657314&p3=10850&p9=6657314&p12=174215926&p5=1662684189370000_1769833153870389&p7=4e15fe03b27719d5&p33=7d30f0d6-07d1-469b-a8f9-cfcbd390d9ce");
+		dataMap.put(
+				"url",
+				"http://ad.click.kaffnet.com/v1/tracking?type=01&p1=30742&p12=174215926&p4=7161057866071683891111533024519966&p5=1662684189370000_1769833153870389&p7=4e15fe03b27719d5&p24=com.altamob.android.sdkdemo.fan21&p33=7d30f0d6-07d1-469b-a8f9-cfcbd390d9ce&p37=0&p48=0&p64=1&p65=5.0.0.5.4230&p66=1.0");
+		dataMap.put("platform", "android");
+		dataMap.put("callback", "http://sg-ad.altamob.com/offertest/admin/callback");
+		System.out.println(JSON.toJSONString(dataMap));
+
+		String responseStr = HttpUtil.requestPostHttps(requesturl, JSON.toJSONString(dataMap));
+
+		if (StringUtils.isNotBlank(responseStr)) {
+			System.out.println(responseStr);
+		}
 	}
 
 
