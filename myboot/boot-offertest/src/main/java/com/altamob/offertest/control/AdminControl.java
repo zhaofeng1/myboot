@@ -59,10 +59,13 @@ public class AdminControl {
 					country = reqData.getGeo();
 					start = reqData.getStart();
 					clickurl = reqData.getClickurl();
+
+					String logTxt = OfferTracking.getLogTemp(reqBody, offerid, country, clickurl, "10", start, end);
+					OfferTrackingLog.logStr(logTxt);
+				} else {
+					log.error("not find reqData:" + id);
 				}
 
-				String logTxt = OfferTracking.getLogTemp(reqBody, offerid, country, clickurl, "10", start, end);
-				OfferTrackingLog.logStr(logTxt);
 			} catch (Exception e) {
 				log.error("AdminControl.callback:", e);
 			}

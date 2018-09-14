@@ -27,6 +27,7 @@ public class StartTrackingJob {
 		logger.info("job start!");
 		List<Object[]> list = feedOfferService.getLastHourOffer();
 		if (list.size() > 0) {
+			logger.info("StartTrackingJob.getLastHourOffer num:" + list.size());
 			OfferTracking.startTrackingFromDb(list, threadnum);
 		}
 		logger.info("job end!");
