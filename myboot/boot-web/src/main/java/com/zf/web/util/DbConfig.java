@@ -1,21 +1,25 @@
 package com.zf.web.util;
 
-import javax.sql.DataSource;
-
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
+import javax.sql.DataSource;
+
+/**
+ * @Author zhaofeng
+ * @Date2019/5/20 14:42
+ * @Version V1.0
+ **/
 @Configuration
 public class DbConfig {
 
-	@Bean(name = "defaultDb")
-	@Primary
-	@ConfigurationProperties(prefix = "spring.datasource")
-	public DataSource mysqlDataSource() {
-		return DataSourceBuilder.create().build();
-	}
-
+    @Bean(name = "hasofferSource")
+    @Qualifier("hasofferSource")
+    @ConfigurationProperties(prefix = "spring.datasource.hasoffer")
+    public DataSource hasofferSource() {
+        return DataSourceBuilder.create().build();
+    }
 }

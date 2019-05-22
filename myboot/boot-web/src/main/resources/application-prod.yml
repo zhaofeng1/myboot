@@ -1,0 +1,28 @@
+# tomcat最大线程池
+server:
+  tomcat:
+    max-threads: 0
+  port: 8010
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://sg-adserver-hasoffer.cdvvzzu6xuar.ap-southeast-1.rds.amazonaws.com:33060/hasoffer_0720
+    username: ad_offer_rw
+    password: AdsPrd_48usxjLq
+    driver-class-name: com.mysql.jdbc.Driver
+
+logging:
+  config: classpath:logback-prd.xml
+
+system:
+  proxy:
+    server:
+      host: 52.76.66.41
+      port: 10051
+      forward: open
+  click:
+    corePoolSize: 2000
+    maxPoolSize: 5000
+    queueSize: 2000
