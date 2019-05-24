@@ -1,6 +1,8 @@
 package com.zf.web.control;
 
+import com.alibaba.fastjson.JSON;
 import com.zf.web.dao.hasoffer.ProxyRepository;
+import com.zf.web.model.hasoffer.ProxyRatio;
 import com.zf.web.service.hasoffer.ProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,9 @@ public class CommonControl {
 	public String test() {
 		long num = proxyRatioRepository.count();
 		System.out.println("num:" + num);
+
+		ProxyRatio proxyRatio = proxyRatioRepository.findById(2);
+		System.out.println(JSON.toJSONString(proxyRatio));
 
 		return "ok";
 	}

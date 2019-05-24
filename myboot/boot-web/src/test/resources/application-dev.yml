@@ -1,0 +1,44 @@
+# tomcat最大线程池
+server:
+  tomcat:
+    max-threads: 0
+  port: 8001
+
+spring:
+  datasource:
+    hasoffer:
+      jdbc-url: jdbc:mysql://10.200.10.146:3306/hasoffer_0805
+      username: zhaofeng
+      password: zhaofeng_123
+      driver-class-name: com.mysql.jdbc.Driver
+
+jpa:
+  properties:
+    hibernate:
+      show_sql:true
+      format_sql:true
+
+logging:
+  config: classpath:logback-dev.xml
+
+system:
+  proxy:
+    click:
+      host: servercountry-US.zproxy.lum-superproxy.io
+      port: 22225
+      user:
+        template: lum-customer-{0}-zone-conn_test-country-{1}-session-{2}
+        name: altamob
+        password: xiebcwpfvvkf
+    smart:
+      host: gate.smartproxy.com
+      port: 7000
+      user:
+        template: user-{0}-country-{1}
+        name: cloud_task
+        password: pt7oh52q
+      ratio: 100
+  click:
+    corePoolSize: 2000
+    maxPoolSize: 5000
+    queueSize: 2000

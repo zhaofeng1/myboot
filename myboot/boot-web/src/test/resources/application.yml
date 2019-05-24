@@ -1,0 +1,5 @@
+#起作用的配置
+
+spring:
+  profiles:
+    active: dev
