@@ -63,12 +63,18 @@ public class ProxyServiceImp implements ProxyService {
         }, pageRequest);
     }
 
+    /**
+     * lambda
+     *
+     * @param page
+     * @param size
+     * @param sort
+     * @param proxyQuery
+     * @return
+     */
     public Page<ProxyRatio> getProxyratioByPageAndQuery1(int page, int size, Sort sort, final ProxyQuery proxyQuery) {
 
         PageRequest pageRequest = buildPageRequest(page, size, sort);
-        new Thread(() -> {
-            System.out.println("Lambda可读性强一些");
-        }).start();
         return proxyPageRepository.findAll((Root<ProxyRatio> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<Predicate>();
 

@@ -11,6 +11,18 @@ spring:
       username: zhaofeng
       password: zhaofeng_123
       driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 10.200.10.224
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 50
+        max-idle: 10
+        min-idle: 0
+        max-wait: 5000
+    timeout: 15000
+
 
 jpa:
   properties:
